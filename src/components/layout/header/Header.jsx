@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button'
 import React from 'react'
+import SignupModal from '@/components/auth/SignupModal'
 
 const Header = () => {
   return (
@@ -11,7 +11,7 @@ const Header = () => {
 
       {/* signup button */}
       <div className='text-center'>
-        <Button className='px-7 py-2 rounded-full border bg-transparent'>SignUp</Button>
+        <SignupModal />
       </div>
     </header>
   )
