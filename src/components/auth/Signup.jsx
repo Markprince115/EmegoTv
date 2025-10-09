@@ -1,37 +1,78 @@
-"use client"
+// sign up form component using shadcn ui, hook form and zod and sonner toast for notifications
+// also uses the useAuth context to login the user after signup
+// and redirects to the home page
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import axios from "axios";
 
-import React from 'react'
-import { useForm } from 'react-hook-form'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+const signupSchema = z.object({
+  username: z.string().min(2, "Username must be at least 2 characters"),
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  role: z.enum(["CREATOR", "VIEWER"], {
+    required_error: "Please select a role",
+  }),
+});
 
-const Signup = () => {
+export default function Signup() {
+  const { login } = useAuth();
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
   const form = useForm({
+    resolver: zodResolver(signupSchema),
     defaultValues: {
-      username: '',
-      email: '',
-      role: '',
-      password: '',
-      confirmPassword: ''
-    }
-  })
+      username: "",
+      email: "",
+      password: "",
+      role: "VIEWER",
+    },
+  });
 
-  const onSubmit = (data) => {
-    console.log('Signup data:', data)
-    // Handle signup logic here
-  }
+  const onSubmit = async (data) => {
+    setLoading(true);
+    try {
+      const response = await axios.post("/api/auth/signup", data);
+      const { user, token } = response.data;
+
+      login(user, token);
+      toast.success("Account created successfully!");
+      router.push("/");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Card className="w-full max-w-md mx-auto">
-      <CardHeader className="text-center">
-        <CardTitle className="text-2xl font-bold">Create Account</CardTitle>
-        <CardDescription>
-          Join EMEGO TV and start earning as a creator or viewer
-        </CardDescription>
+      <CardHeader>
+        <CardTitle>Create Account</CardTitle>
+        <CardDescription>Join us as a creator or viewer</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -43,7 +84,7 @@ const Signup = () => {
                 <FormItem>
                   <FormLabel>Username</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter your username" {...field} />
+                    <Input placeholder="Enter username" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -57,30 +98,8 @@ const Signup = () => {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input type="email" placeholder="Enter your email" {...field} />
+                    <Input type="email" placeholder="Enter email" {...field} />
                   </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="role"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Role</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select your role" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="creator">Creator</SelectItem>
-                      <SelectItem value="viewer">Viewer</SelectItem>
-                    </SelectContent>
-                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
@@ -93,7 +112,11 @@ const Signup = () => {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="Enter your password" {...field} />
+                    <Input
+                      type="password"
+                      placeholder="Enter password"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -102,26 +125,45 @@ const Signup = () => {
 
             <FormField
               control={form.control}
-              name="confirmPassword"
+              name="role"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Confirm Password</FormLabel>
+                  <FormLabel>Select Role</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="Confirm your password" {...field} />
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className="flex gap-4"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="CREATOR" id="creator" />
+                        <FormLabel htmlFor="creator">Creator</FormLabel>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="VIEWER" id="viewer" />
+                        <FormLabel htmlFor="viewer">Viewer</FormLabel>
+                      </div>
+                    </RadioGroup>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            <Button type="submit" className="w-full">
-              Create Account
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={loading}
+            >
+              {loading ? "Creating Account..." : "Create Account"}
             </Button>
           </form>
         </Form>
       </CardContent>
     </Card>
-  )
+  );
 }
-
-export default Signup
+// form with name, email, password and role (creator or viewer) fields
+// on submit, call the /api/auth/signup endpoint and pass the form data
+// if successful, login the user using the useAuth context and redirect to the home page
+// if error, display the error message using toast from sonner

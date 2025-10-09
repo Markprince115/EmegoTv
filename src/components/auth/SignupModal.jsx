@@ -5,19 +5,25 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Button } from '@/components/ui/button'
 import Signup from './Signup'
 
-const SignupModal = () => {
+const SignupModal = ({ isScrolled }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className='px-7 py-2 rounded-full border bg-transparent'>
+        <Button variant="ghost" className={`
+          px-5 py-1.5 
+          rounded-full 
+          border 
+          hover:bg-transparent 
+          ${isScrolled ? 'text-neutral-800 border-neutral-800' : 'text-neutral-50 border-neutral-50'}
+        `}>
           SignUp
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[375px]">
         <DialogHeader>
-          <DialogTitle>Join EMEGO TV</DialogTitle>
-          <DialogDescription>
-            Create your account to start earning as a creator or viewer
+          <DialogTitle>Sign Up</DialogTitle>
+          <DialogDescription className="text-sm">
+            Create your account to get started
           </DialogDescription>
         </DialogHeader>
         <Signup />

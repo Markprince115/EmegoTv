@@ -1,3 +1,34 @@
+Environment setup
+-----------------
+
+Create a `.env` file in the project root with the following variables:
+
+```
+DATABASE_URL="postgresql://<user>:<password>@<neon-host>/<db>?sslmode=require"
+BETTER_AUTH_SECRET="<generated-with-@better-auth/cli-secret>"
+BETTER_AUTH_URL="http://localhost:3000"
+```
+
+Commands
+--------
+
+Generate Prisma client:
+
+```
+npx prisma generate
+```
+
+Push schema to Neon (create/update tables):
+
+```
+npx prisma db push
+```
+
+Run dev server:
+
+```
+npm run dev
+```
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
