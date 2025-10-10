@@ -1,30 +1,24 @@
-"use client"
-import React, { useState, useEffect } from 'react'
-import SignupModal from '@/components/auth/SignupModal'
-import { useAuth } from '../../../../context/AuthContext'
+'use client'
+import SignupModal from '@/components/auth/SignupModal';
+import React from 'react'
 
 const Header = () => {
-  const [isScrolled, setIsScrolled] = useState(false)
 
-  // if user is signed in, show profile pic and dropdown menu
-  // if not, show signup button
-  // import use auth from auth context
-  const { user } = useAuth()
-
-
-
-  useEffect(() => {
+  // change signup button color on scroll to dark background
+  const [isScrolled, setIsScrolled] = React.useState(false);
+  React.useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 0) {
-        setIsScrolled(true)
+      if (window.scrollY > 50) {
+        setIsScrolled(true);
       } else {
-        setIsScrolled(false)
+        setIsScrolled(false);
       }
-    }
-
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   return (
     <header className='flex items-center justify-around bg-transparent fixed w-full backdrop-blur-md z-50 p-4'>
@@ -36,9 +30,9 @@ const Header = () => {
       </div>
 
       {/* signup button */}
-      {!user && <div className='text-center'>
-        <SignupModal isScrolled={isScrolled} />
-      </div>}
+      <div className=''>
+          <SignupModal isScrolled={isScrolled}/>
+      </div>
     </header>
   )
 }

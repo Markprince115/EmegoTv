@@ -1,7 +1,8 @@
 // auth js using bcryptjs jwt and prisma
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import prisma from "./prisma.js";
+// import prisma from prisma client
+import prisma from "./prisma";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret_key";
 

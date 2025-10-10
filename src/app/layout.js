@@ -3,6 +3,14 @@ import "./globals.css";
 import Header from "@/components/layout/header/Header";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "../../context/AuthContext";
+import {
+  ClerkProvider,
+  SignInButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from '@clerk/nextjs'
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -18,6 +26,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
+    <ClerkProvider>
     <html lang="en" nighteye="disabled">
       <body
         className={`${poppins.variable} antialiased`}
@@ -29,5 +38,6 @@ export default function RootLayout({ children }) {
         </AuthProvider>
       </body>
     </html>
+    </ClerkProvider>
   );
 }
