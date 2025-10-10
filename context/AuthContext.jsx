@@ -1,6 +1,6 @@
 'use client'
 // auth context for managing auth state
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useContext } from "react";
 import { getUserFromToken } from "@/lib/auth.js";
 import { useRouter } from "next/navigation";
 

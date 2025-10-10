@@ -2,7 +2,7 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/header/Header";
 import { Toaster } from "@/components/ui/sonner";
-import { AuthProvider } from "../../context/AuthCotext";
+import { AuthProvider } from "../../context/AuthContext";
 
 const poppins = Poppins({
   variable: "--font-poppins",

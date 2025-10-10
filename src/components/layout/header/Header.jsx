@@ -1,7 +1,7 @@
 "use client"
 import React, { useState, useEffect } from 'react'
 import SignupModal from '@/components/auth/SignupModal'
-import { useAuth } from '../../../../context/AuthCotext'
+import { useAuth } from '../../../../context/AuthContext'
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false)

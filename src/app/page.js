@@ -3,7 +3,7 @@
 import Hero from "@/components/sections/Hero"
 import HowItWorks from "@/components/sections/HowItWorks"
 import Testimonial from "@/components/sections/Testimonial"
-import { useAuth } from "../../context/AuthCotext"
+import { useAuth } from "../../context/AuthContext"
 import { toast } from "sonner"
 
 export default function Home() {

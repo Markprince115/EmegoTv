@@ -1,10 +1,8 @@
 // sign up route
 import { NextResponse } from "next/server";
-import prisma from "@/lib/prisma.js";
 import { hashPassword, generateToken } from "@/lib/auth.js";
 import { z } from "zod";
-import {prisma} from "@/lib/prisma.js";
-
+import prisma from "@/lib/prisma.js";
 
 // signup schema for username, email, role(Viewer or creator) and password
 const signupSchema = z.object({

@@ -1,3 +1,4 @@
+'use client'
 // sign up form component using shadcn ui, hook form and zod and sonner toast for notifications
 // also uses the useAuth context to login the user after signup
 // and redirects to the home page
@@ -5,7 +6,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "../../../context/AuthContext";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
