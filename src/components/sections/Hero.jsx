@@ -1,6 +1,8 @@
+'use client'
 import React from 'react'
 import { Button } from '../ui/button'
 import Link from 'next/link'
+import { motion } from 'framer-motion'
 
 const Hero = () => {
   return (
@@ -189,14 +191,29 @@ const Hero = () => {
                         </div>
                     </div>
                     {/* heading and description with a cta */}
-                    <h1 className='text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold bg-gradient-to-b from-neutral-800 to-neutral-300 bg-clip-text text-transparent'>
+                    <motion.h1 
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6, delay: 0.2 }}
+                      className='text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold bg-gradient-to-b from-neutral-800 to-neutral-300 bg-clip-text text-transparent'
+                    >
                         Get Paid to Watch <br className='hidden sm:block'/>
                         <span className='sm:hidden'> </span>and Create
-                    </h1>
-                    <p className='text-[18px] text-neutral-500 max-w-2xl'>
+                    </motion.h1>
+                    <motion.p 
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6, delay: 0.4 }}
+                      className='text-[14px] text-neutral-500 max-w-2xl'
+                    >
                         Join the waitlist to earn as a viewer or creator, <br/>secure your slot today!.
-                    </p>
-                    <div className='flex flex-col sm:flex-row gap-4 justify-center items-center'>
+                    </motion.p>
+                    <motion.div 
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6, delay: 0.6 }}
+                      className='flex flex-col sm:flex-row gap-4 justify-center items-center'
+                    >
                         <Link href='/signup'>
                             <Button className='px-8 py-5 bg-white text-purple-600 font-semibold rounded-full hover:bg-white/90 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1'>
                                 Join Waitlist
@@ -205,7 +222,7 @@ const Hero = () => {
                         <Button className='px-8 py-5 border-2 border-white text-white font-semibold rounded-full hover:bg-white hover:text-purple-600 transition-all duration-300'>
                             Learn More
                         </Button>
-                    </div>
+                    </motion.div>
                 </div>
             </div>
         </div>
