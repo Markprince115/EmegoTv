@@ -2,7 +2,7 @@
 // and save the roles to the database using clerk and prisma
 // use toast from sonner to show success or error messages
 // this is the signup component
-
+'use client'
 import React from 'react'
 // import form shadcn ui
 import { Input } from '@/components/ui/input'
