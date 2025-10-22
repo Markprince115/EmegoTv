@@ -1,23 +1,48 @@
 "use client"
 
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import * as z from 'zod'
+import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
+import useAuthStore from '@/store/AuthStore'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Loader2 } from 'lucide-react'
+
+// Login form schema
+const loginSchema = z.object({
+  email: z.string().email('Invalid email address'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
+})
 
 const Login = () => {
+  const router = useRouter()
+  const login = useAuthStore(state => state.login)
+  const [isLoading, setIsLoading] = useState(false)
+
   const form = useForm({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
-      username: '',
+      email: '',
       password: ''
     }
   })
 
-  const onSubmit = (data) => {
-    console.log('Login data:', data)
-    // Handle login logic here
+  const onSubmit = async (data) => {
+    setIsLoading(true)
+    try {
+      await login(data.email, data.password)
+      toast.success('Logged in successfully')
+      router.push('/profile')
+    } catch (error) {
+      toast.error(error.message || 'Failed to login')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -33,12 +58,12 @@ const Login = () => {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
-              name="username"
+              name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter your username" {...field} />
+                    <Input type="email" placeholder="Enter your email" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -59,8 +84,19 @@ const Login = () => {
               )}
             />
 
-            <Button type="submit" className="w-full">
-              Sign In
+            <Button 
+              type="submit" 
+              className="w-full bg-purple-600 hover:bg-purple-700"
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Signing in...
+                </>
+              ) : (
+                'Sign In'
+              )}
             </Button>
           </form>
         </Form>

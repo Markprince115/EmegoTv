@@ -1,13 +1,12 @@
-// create api login route to login user with email and password
 import { NextResponse } from "next/server";
-import { comparePassword, generateToken } from "@/lib/auth.js";
+import { comparePassword, generateToken } from "@/lib/auth";
 import { z } from "zod";
-import prisma from "@/lib/prisma.js";
+import prisma from "@/lib/prisma";
 
-// login schema for email and password
+// Login schema
 const loginSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(6).max(100),
+  password: z.string().min(1),
 });
 
 export async function POST(request) {
@@ -21,14 +20,14 @@ export async function POST(request) {
         { status: 400 }
       );
     }
-
-    const { email, password } = parsedBody.data;
     
-    // find user by email
+    const { email, password } = parsedBody.data;
+
+    // Find user by email
     const user = await prisma.user.findUnique({
       where: { email },
     });
-
+    
     if (!user) {
       return NextResponse.json(
         { error: "Invalid email or password" },
@@ -36,8 +35,9 @@ export async function POST(request) {
       );
     }
 
-    // compare password
+    // Compare password
     const isPasswordValid = await comparePassword(password, user.password);
+    
     if (!isPasswordValid) {
       return NextResponse.json(
         { error: "Invalid email or password" },
@@ -45,10 +45,10 @@ export async function POST(request) {
       );
     }
 
-    // generate token
+    // Generate token
     const token = generateToken(user, user.role);
-
-    // return user and token
+    
+    // Return user and token (exclude password)
     return NextResponse.json(
       {
         user: { 
@@ -64,7 +64,7 @@ export async function POST(request) {
   } catch (error) {
     console.error("Error during login:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: "Internal Server Error" },
       { status: 500 }
     );
   }

@@ -1,13 +1,13 @@
-import { Poppins } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/header/Header";
 import { Toaster } from "@/components/ui/sonner";
-import { AuthProvider } from "../../context/AuthContext";
 
-const poppins = Poppins({
-  variable: "--font-poppins",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
-  weight: '400'
+  weight: ["400"],
+  display: "swap"
 });
 
 
@@ -18,18 +18,14 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <ClerkProvider>
     <html lang="en" nighteye="disabled">
       <body
-        className={`${poppins.variable} antialiased`}
+        className={`${inter.variable} antialiased`}
       >
-        <AuthProvider>
           <Header/>
           <Toaster richColors position="top-right" />
           {children}
-        </AuthProvider>
       </body>
     </html>
-    </ClerkProvider>
   );
 }

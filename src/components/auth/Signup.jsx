@@ -1,17 +1,12 @@
-// create a custom signup form componen using shadcn ui, aslo add roles(creator or viewer) to the signup form
-// and save the roles to the database using clerk and prisma
-// use toast from sonner to show success or error messages
-// this is the signup component
 'use client'
-import React from 'react'
-// import form shadcn ui
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
+import { useAuthStore } from '@/lib/auth-client'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
@@ -21,6 +16,8 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { useRouter } from 'next/navigation'
+import axios from 'axios'
 
 // Form validation schema
 const signupSchema = z.object({
@@ -39,6 +36,8 @@ const signupSchema = z.object({
 
 const Signup = () => {
   const [loading, setLoading] = useState(false)
+  const setAuth = useAuthStore((state)=> state.setAuth)
+  const router = useRouter()
 
   const form = useForm({
     resolver: zodResolver(signupSchema),
@@ -52,25 +51,19 @@ const Signup = () => {
 
   const onSubmit = async (data) => {
     setLoading(true)
+    
     try {
-      const response = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      })
+      const response = await axios.post('/api/auth/signup', data);
 
-      const result = await response.json()
-
-      if (!response.ok) {
-        throw new Error(result.message || "Something went wrong")
-      }
-
+      setAuth(response.data.user, response.data.token)
+  
       toast.success("Account created successfully!")
       form.reset()
+      router.push('/')
+      
     } catch (error) {
-      toast.error(error.message)
+      console.error('Signup error:', error) // Debug log
+      toast.error(error?.message || "Failed to create account")
     } finally {
       setLoading(false)
     }
@@ -79,6 +72,11 @@ const Signup = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        {/* form header */}
+        <div className='space-y-2'>
+          <h2 className='text-3xl font-bold text-left text-neutral-800'>Sign up</h2>
+          <p className='text-sm text-neutral-500 text-left'>Create your account to get started</p>
+        </div>
         <FormField
           control={form.control}
           name="username"

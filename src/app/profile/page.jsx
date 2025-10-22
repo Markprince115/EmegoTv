@@ -1,7 +1,7 @@
 //user profile page
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import useAuthStore from '@/store/AuthStore';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
@@ -19,28 +19,36 @@ import {
 import { Loader2 } from 'lucide-react';
 
 const ProfilePage = () => {
-  const { user, token, logout, isLoading } = useAuthStore();
+  const { user, token, isAuthenticated, logout } = useAuthStore();
   const router = useRouter();
-  const [username, setUsername] = React.useState('');
-  const [isUpdating, setIsUpdating] = React.useState(false);
+  const [username, setUsername] = useState('');
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (!isLoading && !user) {
+    if (!isAuthenticated) {
       router.push('/login');
     } else if (user) {
       setUsername(user.username);
+      setIsLoading(false);
     }
-  }, [isLoading, user, router]);
+  }, [isAuthenticated, user, router]);
 
   const handleLogout = () => {
     logout();
     router.push('/login');
+    toast.success('Logged out successfully');
   };
 
   const handleUpdateProfile = async () => {
+    if (!username.trim()) {
+      toast.error('Username cannot be empty');
+      return;
+    }
+
     setIsUpdating(true);
     try {
-      await axios.put('/api/user/profile', 
+      const response = await axios.put('/api/user/profile', 
         { username }, 
         {
           headers: {
@@ -48,9 +56,13 @@ const ProfilePage = () => {
           }
         }
       );
-      toast.success('Profile updated successfully');
+
+      if (response.data) {
+        useAuthStore.setState({ user: { ...user, username } });
+        toast.success('Profile updated successfully');
+      }
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to update profile');
+      toast.error(error.response?.data?.error || 'Failed to update profile');
     } finally {
       setIsUpdating(false);
     }
@@ -64,7 +76,9 @@ const ProfilePage = () => {
     );
   }
 
-  if (!user) return null;
+  if (!isAuthenticated || !user) {
+    return null;
+  }
 
   return (
     <div className="container mx-auto py-10">
@@ -80,7 +94,7 @@ const ProfilePage = () => {
             <label className="text-sm font-medium">Email</label>
             <Input 
               type="email" 
-              value={user.email} 
+              value={user.email || ''} 
               disabled 
               className="bg-muted"
             />
@@ -98,7 +112,7 @@ const ProfilePage = () => {
             <label className="text-sm font-medium">Role</label>
             <Input 
               type="text" 
-              value={user.role} 
+              value={user.role || ''} 
               disabled 
               className="bg-muted"
             />
@@ -113,7 +127,8 @@ const ProfilePage = () => {
           </Button>
           <Button
             onClick={handleUpdateProfile}
-            disabled={isUpdating}
+            disabled={isUpdating || !username.trim()}
+            className="bg-purple-600 hover:bg-purple-700"
           >
             {isUpdating ? (
               <>

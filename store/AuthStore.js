@@ -19,11 +19,17 @@ const useAuthStore = create(
         token: null,
         isLoading: false,
         error: null,
+        isAuthenticated: false,
 
         setUser: (user) => set({ user }),
         setToken: (token) => set({ token }),
         setIsLoading: (isLoading) => set({ isLoading }),
         setError: (error) => set({ error }),
+        setAuth: (user, token)=> set({
+          user,
+          token,
+          isAuthenticated: true
+        }),
 
         login: async (email, password) => {
           set({ isLoading: true, error: null });
@@ -54,7 +60,7 @@ const useAuthStore = create(
         logout: () => {
           localStorage.removeItem('token');
           delete api.defaults.headers.common['Authorization'];
-          set({ user: null, token: null });
+          set({ user: null, token: null, isAuthenticated: false });
         },
 
         fetchUserFromToken: async () => {
