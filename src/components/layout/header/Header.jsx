@@ -1,8 +1,13 @@
 'use client'
 import SignupModal from '@/components/auth/SignupModal';
+import { UserProfile } from '@clerk/nextjs';
+import Link from 'next/link';
 import React from 'react'
+import useAuthStore from 'store/AuthStore';
 
 const Header = () => {
+  // check if user is logged in from auth store
+  const {user, logout} = useAuthStore()
 
   // change signup button color on scroll to dark background
   const [isScrolled, setIsScrolled] = React.useState(false);
@@ -29,10 +34,17 @@ const Header = () => {
         </h1>
       </div>
 
-      {/* signup button */}
-      <div className=''>
+      {/* if user is signed up display profile button */}
+      {user ?
+      (<Link href='/profile'>
+          <UserProfile/>
+        </Link>
+      )
+        :
+        (<div className=''>
           <SignupModal isScrolled={isScrolled}/>
-      </div>
+          </div>
+        )}
     </header>
   )
 }
