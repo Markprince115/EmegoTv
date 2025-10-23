@@ -1,15 +1,14 @@
-import { Inter } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/header/Header";
 import { Toaster } from "@/components/ui/sonner";
 
-const inter = Inter({
-  variable: "--font-inter",
+const poppins = Poppins({
   subsets: ["latin"],
-  weight: ["400"],
-  display: "swap"
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-poppins",
+  display: "swap",
 });
-
 
 export const metadata = {
   title: "EMEGO TV | Home Page",
@@ -20,7 +19,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" nighteye="disabled">
       <body
-        className={`${inter.variable} antialiased`}
+        className={`${poppins.variable} font-poppins antialiased`}
       >
           <Header/>
           <Toaster richColors position="top-right" />

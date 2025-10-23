@@ -57,7 +57,7 @@ const Header = () => {
       {isAuthenticated ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="relative">
+            <Button className="relative bg-neutral-50 text-neutral-800">
               <User className="h-5 w-5 mr-2" />
               {user.username}
             </Button>

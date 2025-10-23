@@ -6,12 +6,13 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
-import useAuthStore from '@/store/AuthStore'
+import useAuthStore from '../../../store/AuthStore'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Loader2 } from 'lucide-react'
+import axios from 'axios'
 
 // Login form schema
 const loginSchema = z.object({
@@ -21,8 +22,8 @@ const loginSchema = z.object({
 
 const Login = () => {
   const router = useRouter()
-  const login = useAuthStore(state => state.login)
-  const [isLoading, setIsLoading] = useState(false)
+  const login = useAuthStore((state) => state.login)
+  const isLoading = useAuthStore((state) => state.isLoading)
 
   const form = useForm({
     resolver: zodResolver(loginSchema),
@@ -33,15 +34,12 @@ const Login = () => {
   })
 
   const onSubmit = async (data) => {
-    setIsLoading(true)
     try {
       await login(data.email, data.password)
       toast.success('Logged in successfully')
       router.push('/profile')
     } catch (error) {
-      toast.error(error.message || 'Failed to login')
-    } finally {
-      setIsLoading(false)
+      toast.error(error?.response?.data?.error || 'Failed to login')
     }
   }
 
@@ -50,7 +48,7 @@ const Login = () => {
       <CardHeader className="text-center">
         <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
         <CardDescription>
-          Sign in to your EMEGO TV account
+          Sign in to your EMEGO<sup>3</sup> account
         </CardDescription>
       </CardHeader>
       <CardContent>

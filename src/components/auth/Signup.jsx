@@ -1,10 +1,10 @@
 'use client'
-import { useAuthStore } from '@/lib/auth-client'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
+import axios from 'axios'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import {
@@ -17,7 +17,8 @@ import {
 } from "@/components/ui/form"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { useRouter } from 'next/navigation'
-import axios from 'axios'
+import { Loader2 } from 'lucide-react'
+import useAuthStore from 'store/AuthStore'
 
 // Form validation schema
 const signupSchema = z.object({
@@ -35,10 +36,9 @@ const signupSchema = z.object({
 })
 
 const Signup = () => {
-  const [loading, setLoading] = useState(false)
-  const setAuth = useAuthStore((state)=> state.setAuth)
   const router = useRouter()
-
+  const setAuth = useAuthStore(state => state.setAuth)
+  const [isLoading, setIsLoading] = useState(false)
   const form = useForm({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -50,22 +50,17 @@ const Signup = () => {
   })
 
   const onSubmit = async (data) => {
-    setLoading(true)
-    
+    setIsLoading(true)
     try {
-      const response = await axios.post('/api/auth/signup', data);
-
+      const response = await axios.post('/api/auth/signup', data)
       setAuth(response.data.user, response.data.token)
-  
       toast.success("Account created successfully!")
       form.reset()
       router.push('/')
-      
     } catch (error) {
-      console.error('Signup error:', error) // Debug log
-      toast.error(error?.message || "Failed to create account")
+      toast.error(error?.response?.data?.error || "Failed to create account")
     } finally {
-      setLoading(false)
+      setIsLoading(false)
     }
   }
 
@@ -153,9 +148,16 @@ const Signup = () => {
         <Button 
           type="submit" 
           className="w-full bg-purple-600 hover:bg-purple-800"
-          disabled={loading}
+          disabled={isLoading}
         >
-          {loading ? "Creating Account..." : "Create Account"}
+          {isLoading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Creating Account...
+            </>
+          ) : (
+            'Create Account'
+          )}
         </Button>
       </form>
     </Form>

@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import useAuthStore from '@/store/AuthStore';
+import useAuthStore from '../../../store/AuthStore';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { toast } from 'sonner';
@@ -48,7 +48,7 @@ const ProfilePage = () => {
 
     setIsUpdating(true);
     try {
-      const response = await axios.put('/api/user/profile', 
+      const response = await axios.put('/api/auth/user', 
         { username }, 
         {
           headers: {
@@ -81,8 +81,8 @@ const ProfilePage = () => {
   }
 
   return (
-    <div className="container mx-auto py-10">
-      <Card className="max-w-md mx-auto">
+    <div className=" mx-auto py-10 bg-purple-600 w-full min-h-screen">
+      <Card className="max-w-md mx-auto mt-20">
         <CardHeader>
           <CardTitle>Profile Settings</CardTitle>
           <CardDescription>
