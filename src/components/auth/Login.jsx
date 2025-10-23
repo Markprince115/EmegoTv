@@ -23,8 +23,8 @@ const loginSchema = z.object({
 
 const Login = () => {
   const router = useRouter()
-  const login = useAuthStore((state) => state.login)
-  const isLoading = useAuthStore((state) => state.isLoading)
+  const setAuth = useAuthStore(state => state.setAuth)
+  const [isLoading, setIsLoading] = useState(false)
 
   const form = useForm({
     resolver: zodResolver(loginSchema),
@@ -36,7 +36,8 @@ const Login = () => {
 
   const onSubmit = async (data) => {
     try {
-      await login(data.email, data.password)
+     const response = await axios.post('/api/auth/login', data)
+     setAuth(response.data.user, response.data.token)
       toast.success('Logged in successfully')
       router.push('/profile')
     } catch (error) {
