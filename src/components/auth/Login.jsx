@@ -13,6 +13,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Loader2 } from 'lucide-react'
 import axios from 'axios'
+import Link from 'next/link'
 
 // Login form schema
 const loginSchema = z.object({
@@ -96,6 +97,19 @@ const Login = () => {
                 'Sign In'
               )}
             </Button>
+
+            {/* Add signup link section */}
+            <div className="mt-4 text-center">
+              <p className="text-sm text-neutral-600">
+                Don't have an account?{' '}
+                <Link 
+                  href="/signup" 
+                  className="text-purple-600 hover:text-purple-700 font-medium ml-1"
+                >
+                  Sign Up
+                </Link>
+              </p>
+            </div>
           </form>
         </Form>
       </CardContent>

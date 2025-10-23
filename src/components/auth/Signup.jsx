@@ -17,8 +17,9 @@ import {
 } from "@/components/ui/form"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { useRouter } from 'next/navigation'
-import { Link, Loader2 } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 import useAuthStore from 'store/AuthStore'
+import Link from 'next/link'
 
 // Form validation schema
 const signupSchema = z.object({
@@ -163,7 +164,7 @@ const Signup = () => {
         {/* link to login if already have an account */}
         <div>
           <p className="text-sm text-center text-neutral-600">
-            Already have an account?{' '}
+            Already have an account?
             <Link href="/login" className="text-purple-600 hover:underline">
               Log in
             </Link>

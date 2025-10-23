@@ -1,7 +1,14 @@
 "use client"
 
 import React from 'react'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogTrigger 
+} from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import Signup from '@/components/auth/Signup'
 
@@ -19,11 +26,11 @@ const SignupModal = ({ isScrolled }) => {
           SignUp
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[375px]">
+      <DialogContent className="sm:max-w-[350px]">
         <DialogHeader>
-          <DialogTitle>Sign Up</DialogTitle>
-          <DialogDescription className="text-sm">
-            Create your account to get started
+          <DialogTitle>Create Account</DialogTitle>
+          <DialogDescription>
+            Join EMEGO<sup>3</sup> and start earning as a creator or viewer
           </DialogDescription>
         </DialogHeader>
         <Signup />
