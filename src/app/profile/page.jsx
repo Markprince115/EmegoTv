@@ -36,7 +36,7 @@ const ProfilePage = () => {
 
   const handleLogout = () => {
     logout();
-    router.push('/login');
+    router.push('/');
     toast.success('Logged out successfully');
   };
 
