@@ -35,13 +35,16 @@ const Login = () => {
   })
 
   const onSubmit = async (data) => {
+    setIsLoading(true)
     try {
-     const response = await axios.post('/api/auth/login', data)
-     setAuth(response.data.user, response.data.token)
+      const response = await axios.post('/api/auth/login', data)
+      setAuth(response.data.user, response.data.token)
       toast.success('Logged in successfully')
       router.push('/profile')
     } catch (error) {
       toast.error(error?.response?.data?.error || 'Failed to login')
+    } finally {
+      setIsLoading(false)
     }
   }
 
