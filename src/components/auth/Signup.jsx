@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/form"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { useRouter } from 'next/navigation'
-import { Loader2 } from 'lucide-react'
+import { Link, Loader2 } from 'lucide-react'
 import useAuthStore from 'store/AuthStore'
 
 // Form validation schema
@@ -159,6 +159,16 @@ const Signup = () => {
             'Create Account'
           )}
         </Button>
+
+        {/* link to login if already have an account */}
+        <div>
+          <p className="text-sm text-center text-neutral-600">
+            Already have an account?{' '}
+            <Link href="/login" className="text-purple-600 hover:underline">
+              Log in
+            </Link>
+          </p>
+        </div>
       </form>
     </Form>
   )
